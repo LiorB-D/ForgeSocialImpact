@@ -1,23 +1,37 @@
-import logo from './logo.svg';
 import './App.css';
+import React, {useState, useEffect} from 'react';
+
+
+
+const url = "https://api.propublica.org/congress/v1/116/house/members.json"
+const apiKey = "4ll6jGJJSLaZrafzsIuVFmaNrmcrQFlgyQzcy3Yi"
 
 function App() {
+  const [members, setMembers] = useState([])
+  
+    const fetchMembers = async () => {
+      let resp = fetch(url, {
+        headers: {
+          'X-API-Key': apiKey
+        }
+      }).then(response => response.json()).then(data => {
+        setMembers(data.results[0].members)
+        console.log(members)
+
+      })
+    }  
+    useEffect(() => {
+      fetchMembers()
+    }, [])
+
+  
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Senators</h1>
+      {members.map(m => (
+          <p>{m.last_name}</p>
+        ))}
     </div>
   );
 }
